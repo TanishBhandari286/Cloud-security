@@ -1,17 +1,8 @@
-#!/usr/bin/env python3
-# solution.py - Assignment 2
-# Decode the three ciphertext files using the key from Assignment 1.
-# Reads the corrected ciphertext files (fixed_ciphertext_*.txt);
-# the original files we received were corrupted, see fix.py.
+
 
 import os
-
-# Folder where this script is, so the code runs from anywhere
-# (VS Code sometimes runs from a different folder)
 BASE = os.path.dirname(os.path.abspath(__file__))
 
-# ---------------------------------------------------------------------
-# How we found this key (in Assignment 1):
 #
 # The cipher is a monoalphabetic substitution cipher, meaning every
 # plaintext letter is replaced by one fixed symbol. The cipher alphabet
@@ -67,8 +58,7 @@ def decrypt(text):
 
 for i in (1, 2, 3):
     # open the file next to this script (not the current folder)
-    # (we use the corrected ciphertext files, see fix.py)
-    with open(os.path.join(BASE, f"fixed_ciphertext_{i}.txt")) as f:
+    with open(os.path.join(BASE, f"test_ciphertext_{i}.txt")) as f:
         ciphertext = f.read()
 
     print(f"===== Question {i} =====")
