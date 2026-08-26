@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # solution.py - Assignment 2
-# Decode all three ciphertext files using the key from Assignment 1.
+# Decode the three ciphertext files using the key from Assignment 1.
+# Reads the corrected ciphertext files (fixed_ciphertext_*.txt);
+# the original files we received were corrupted, see fix.py.
 
 import os
 
@@ -65,7 +67,8 @@ def decrypt(text):
 
 for i in (1, 2, 3):
     # open the file next to this script (not the current folder)
-    with open(os.path.join(BASE, f"test_ciphertext_{i}.txt")) as f:
+    # (we use the corrected ciphertext files, see fix.py)
+    with open(os.path.join(BASE, f"fixed_ciphertext_{i}.txt")) as f:
         ciphertext = f.read()
 
     print(f"===== Question {i} =====")

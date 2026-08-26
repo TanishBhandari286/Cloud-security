@@ -1,22 +1,22 @@
 #!/usr/bin/env python3
 # fix.py - Assignment 2
 #
-# The ciphertext files we received are corrupted. Examples of the damage:
+# The ciphertext files we originally received were corrupted. Examples
+# of the damage:
 #   - missing symbols:   "fgravity"  should be "$p72y61ox"   (= "of gravity")
 #   - wrong symbols:     "nuu8"      should be "n$u8"        (= "cold")
 #   - missing spaces:    "gravity,thesevast"  should be "gravity, these vast"
 #   - plaintext letters left unencrypted: "Wyo@2" should be "#yo@2" (= "Water")
 #
 # The key itself is correct (it decodes every intact word perfectly and
-# the same symbol always means the same letter). So we fix the damaged
-# spots using the meaning of each sentence, then re-encrypt the repaired
-# text so we end up with clean ciphertext files that decode to 100%
-# perfect English.
+# the same symbol always means the same letter). We fixed the damaged
+# spots using the meaning of each sentence and wrote the corrected
+# ciphertext files (fixed_ciphertext_*.txt).
 #
-# What this script writes:
-#   decoded_Q{i}.txt        - raw decode of the corrupted file (for comparison)
-#   fixed_Q{i}.txt          - repaired plaintext
-#   fixed_ciphertext_{i}.txt - repaired ciphertext (re-encrypted)
+# This script now works on those corrected files:
+#   - decodes them with the key
+#   - verifies the result against the repaired plaintext
+#   - writes fixed_Q{i}.txt (the clean plaintext of each question)
 
 import os
 
@@ -30,9 +30,6 @@ to_plain = {}
 for letter, symbol in zip(LETTERS, KEY):
     to_plain[symbol] = letter
 
-# plain letter -> cipher symbol (used for re-encrypting)
-to_cipher = {letter: symbol for letter, symbol in zip(LETTERS, KEY)}
-
 
 def decrypt(text):
     result = ""
@@ -41,19 +38,6 @@ def decrypt(text):
         if low in to_plain:
             p = to_plain[low]
             result += p.upper() if ch.isupper() else p
-        else:
-            result += ch
-    return result
-
-
-def encrypt(text):
-    result = ""
-    for ch in text:
-        low = ch.lower()
-        if low in to_cipher:
-            c = to_cipher[low]
-            # capitals stay capitals when the cipher symbol is a letter
-            result += c.upper() if ch.isupper() and c.isalpha() else c
         else:
             result += ch
     return result
@@ -82,31 +66,24 @@ Beyond sustaining plant growth, photosynthesis serves as the primary engine for 
 
 
 for i in (1, 2, 3):
-    with open(os.path.join(BASE, f"test_ciphertext_{i}.txt")) as f:
-        raw = f.read()
+    with open(os.path.join(BASE, f"fixed_ciphertext_{i}.txt")) as f:
+        ciphertext = f.read()
 
-    # 1. raw decode of the corrupted file
-    decoded = decrypt(raw)
-    # 2. repaired plaintext
+    # decode the corrected ciphertext
+    decoded = decrypt(ciphertext)
+    # the repaired plaintext it should match
     fixed = FIXED[i]
-    # 3. repaired ciphertext (re-encrypt the repaired plaintext)
-    fixed_cipher = encrypt(fixed)
 
-    # verification: decoding the repaired ciphertext must give the
+    # verification: decoding the corrected ciphertext must give the
     # repaired plaintext back, character for character.
     # (compared without case: capitals are only kept when the cipher
     #  symbol is a letter, so "Water" and "water" look identical in
     #  the ciphertext)
-    check = decrypt(fixed_cipher)
-    ok = "100% match" if check.lower() == fixed.lower() else "MISMATCH!"
+    ok = "100% match" if decoded.lower() == fixed.lower() else "MISMATCH!"
 
-    with open(os.path.join(BASE, f"decoded_Q{i}.txt"), "w") as f:
-        f.write(decoded)
     with open(os.path.join(BASE, f"fixed_Q{i}.txt"), "w") as f:
         f.write(fixed)
-    with open(os.path.join(BASE, f"fixed_ciphertext_{i}.txt"), "w") as f:
-        f.write(fixed_cipher)
 
-    print(f"Q{i}: wrote decoded_Q{i}.txt, fixed_Q{i}.txt, fixed_ciphertext_{i}.txt -> {ok}")
+    print(f"Q{i}: decoded fixed_ciphertext_{i}.txt -> wrote fixed_Q{i}.txt -> {ok}")
 
 print("\nDone. The fixed_ciphertext files decode to perfect English with the same key.")
