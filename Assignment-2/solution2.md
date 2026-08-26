@@ -43,8 +43,5 @@ beyond sustaining plant growth, photosynthesis serves as the primary engine for 
 
 ## key
 
-same key as assignment 1, y5n8@p7q1twu09$342vos6#zxr (cipher symbol for a to z).
+same key y5n8@p7q1twu09$342vos6#zxr
 
-## verification
-
-all three files decoded into meaningful english about science topics and the same symbol always meant the same letter everywhere so i am sure the key is correct. i only fixed the obvious typos in the cipher files.
